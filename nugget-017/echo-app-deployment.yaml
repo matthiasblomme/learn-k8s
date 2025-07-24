@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echo-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: echo-app
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: echo-app
+    spec:
+      containers:
+        - name: echo-server
+          image: ealen/echo-server:v99
+          ports:
+            - containerPort: 80

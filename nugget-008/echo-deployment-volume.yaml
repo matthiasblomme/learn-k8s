@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echo-file-secret
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: echo-file-secret
+  template:
+    metadata:
+      labels:
+        app: echo-file-secret
+    spec:
+      containers:
+        - name: echo-server
+          image: ealen/echo-server
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: secret-vol
+              mountPath: /etc/secret-files
+              readOnly: true
+      volumes:
+        - name: secret-vol
+          secret:
+            secretName: file-secret

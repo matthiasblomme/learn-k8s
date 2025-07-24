@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-tls
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  tls:
+    - hosts:
+        - "echo.local"
+      secretName: new-tls-secret
+  rules:
+    - host: "echo.local"
+      http:
+        paths:
+          - path: /echo-tls
+            pathType: Prefix
+            backend:
+              service:
+                name: echo-tls
+                port:
+                  number: 80
+          - path: /nginx-tls
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx-tls
+                port:
+                  number: 80

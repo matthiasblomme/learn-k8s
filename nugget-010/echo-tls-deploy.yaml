@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echo-tls
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: echo-tls
+  template:
+    metadata:
+      labels:
+        app: echo-tls
+    spec:
+      containers:
+        - name: echo-server
+          image: ealen/echo-server
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: echo-tls
+spec:
+  selector:
+    app: echo-tls
+  ports:
+    - port: 80
+      targetPort: 80

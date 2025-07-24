@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cm-busybox
+spec:
+  containers:
+    - name: cm-busybox
+      image: busybox
+      command:
+        - /bin/sh
+        - -c
+        - |
+          echo "APP_MODE = $APP_MODE"
+          echo "LOG_LEVEL = LOG_LEVEL"
+          sleep 3600
+      env:
+        - name: APP_MODE
+          valueFrom:
+            configMapKeyRef:
+              name: echo-config
+              key: APP_MODE
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: echo-config
+              key: LOG_LEVEL

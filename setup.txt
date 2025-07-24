@@ -1,0 +1,11 @@
+Start minikube
+--------------
+minikube start --insecure-registry "192.168.0.0/16" --driver=docker
+
+Port forwarding for nginx controller
+------------------------------------
+kubectl port-forward -n ingress-nginx svc/ingress-nginx-controller 8888:80
+
+Loop top command
+----------------
+PS> while ($true) { kubectl top pod echo-oom; Start-Sleep -Seconds 2; Clear-Host }

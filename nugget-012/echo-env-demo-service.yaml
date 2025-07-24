@@ -1,0 +1,12 @@
+# echo-env-demo-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: echo-env-demo
+spec:
+  selector:
+    app: echo-env-demo
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

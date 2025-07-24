@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cm-secret-pod
+spec:
+  containers:
+    - name: alpine
+      image: alpine
+      command: ["sleep", "3600"]
+      volumeMounts:
+        - name: cm-vol
+          mountPath: /mnt/config
+        - name: secret-vol
+          mountPath: /mnt/secret
+  volumes:
+    - name: cm-vol
+      configMap:
+        name: cm-volume-demo
+    - name: secret-vol
+      secret:
+        secretName: secret-volume-demo

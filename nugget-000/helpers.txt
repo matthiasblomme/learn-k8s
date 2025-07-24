@@ -1,0 +1,4 @@
+real-time stream of logs from everything in the namespace:
+----------------------------------------------------------
+
+kubectl logs -f --all-containers --prefix=true --tail=10 --selector=app!=noisy

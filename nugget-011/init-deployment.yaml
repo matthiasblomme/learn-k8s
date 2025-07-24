@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echo-init
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: echo-init
+  template:
+    metadata:
+      labels:
+        app: echo-init
+    spec:
+      initContainers:
+        - name: wait-before-start
+          image: busybox
+          command: ["sh", "-c", "echo Init container starting; sleep 15; echo Done"]
+      containers:
+        - name: echo-server
+          image: ealen/echo-server
+          ports:
+            - containerPort: 80

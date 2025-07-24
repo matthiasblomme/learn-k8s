@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-routing
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+      - http:
+          paths:
+            - path: /env
+              pathType: Prefix
+              backend:
+                service:
+                  name: echo-env
+                  port:
+                    number: 80
+            - path: /nginx
+              pathType: Prefix
+              backend:
+                service:
+                  name: nginx
+                  port:
+                    number: 80

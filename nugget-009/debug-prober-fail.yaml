@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: debug-probe
+  labels:
+    app: debug-probe
+spec:
+  containers:
+    - name: debug
+      image: busybox
+      command: ["/bin/sh", "-c", "while true; do sleep 30; done"]
+      livenessProbe:
+        httpGet:
+          path: /fail
+          port: 80
+        initialDelaySeconds: 3
+        periodSeconds: 5
