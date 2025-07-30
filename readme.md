@@ -93,7 +93,32 @@
 - **Files**: `configmap.yaml`, `pod.yaml`
 - **Test**: Log and confirm secret environment variable.
 
-## Nugget 024 - Secure Application Deployment
-- **Topic**: Mounting secrets securely and limiting access.
+## Nugget 024 - Secure App Deployment (Security Context + Downward API)
+
+- **Topic**: Hardening pod/container security using security contexts, and reading pod metadata using the Downward API.
 - **Files**: `secure-echo.yaml`
-- **Test**: Mount secrets as files and verify access restrictions.
+- **Summary**:
+    - Set container-level security context:
+        - `runAsUser`: Runs the container as a specific user ID (e.g., 1000).
+        - `readOnlyRootFilesystem`: Makes the container’s root filesystem read-only.
+        - `capabilities`: Drop unnecessary Linux capabilities.
+    - Use the **Downward API** to expose pod metadata into the container using environment variables (e.g., pod name, namespace).
+
+- **Test**:
+    1. Apply the YAML:
+        ````bash
+        kubectl apply -f secure-echo.yaml
+        ````
+    2. Exec into the pod and check user ID:
+        ````bash
+        kubectl exec -it <pod-name> -- whoami
+        id
+        ````
+    3. Verify that the container has no write access to `/`:
+        ````bash
+        kubectl exec -it <pod-name> -- touch /test.txt
+        # Should fail due to readOnlyRootFilesystem
+        ````
+    4. Check if pod metadata is available via environment variables:
+        ````bash
+        kubectl exec -it <pod-name> -- printenv | grep POD_
