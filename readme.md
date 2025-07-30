@@ -122,3 +122,103 @@
     4. Check if pod metadata is available via environment variables:
         ````bash
         kubectl exec -it <pod-name> -- printenv | grep POD_
+
+# Nugget 025 - Persistent Volumes (PV) & PVCs
+
+This lesson demonstrates Kubernetes persistent storage using a `PersistentVolume` and a `PersistentVolumeClaim`.
+
+You’ll:
+- Create a `PersistentVolume` with `hostPath` as storage backend.
+- Bind a `PersistentVolumeClaim` to it.
+- Launch a pod that mounts the claim and writes a file to the mounted volume.
+
+### Files:
+- `pv.yaml`: Defines the persistent volume (1Gi).
+- `pvc.yaml`: Requests 500Mi of storage.
+- `pod.yaml`: Pod with Alpine container that mounts `/data`.
+
+### Test:
+1. Apply all resources.
+2. Use `kubectl exec` to write a file inside the pod.
+3. Restart the pod and verify the file still exists (on the same node).
+
+> ⚠️ Note: `hostPath` is node-local. For real persistence across nodes, use NFS or a cloud volume.
+
+## Nugget 26 - StatefulSets
+
+**Topic**: Deploying stateful applications with predictable identity and persistent storage.
+
+### Overview
+
+This nugget demonstrates how to use StatefulSets to manage pods that require:
+
+- Stable network identities.
+- Persistent storage per pod.
+- Ordered, graceful deployment and scaling.
+
+We deploy a sample echo server with a headless service and PersistentVolumeClaims (PVCs) managed via `volumeClaimTemplates`.
+
+### Files
+
+- `headless-service.yaml`: Defines a headless service with `clusterIP: None`.
+- `statefulset-echo.yaml`: Creates a StatefulSet with 3 replicas and a 100Mi persistent volume per pod.
+
+### How to Run
+
+```bash
+kubectl apply -f headless-service.yaml
+kubectl apply -f statefulset-echo.yaml
+kubectl get pods
+kubectl get pvc
+kubectl exec -it echo-app-0 -- sh
+```
+
+## ⏱️ Nugget 27 – Jobs & CronJobs
+
+This nugget explores how to run one-time and recurring tasks in Kubernetes using `Job` and `CronJob` resources.
+
+### 🧠 What You Learn
+
+- How to define a `Job` to ensure a task runs to completion.
+- How `backoffLimit`, `completions`, and `restartPolicy` affect behavior.
+- How to schedule recurring jobs using `CronJob` with cron syntax.
+- Common pitfalls: missed schedules, pod history retention.
+
+### 🔧 Files in this Nugget
+
+- `job.yaml`: A simple job that echoes a message and exits.
+- `cronjob.yaml`: A cronjob that runs every minute.
+
+### ▶️ How to Test
+
+Apply the job:
+
+```bash
+kubectl apply -f job.yaml
+kubectl get jobs
+kubectl logs job/hello-job
+```
+
+Apply the cronjob:
+
+```bash
+kubectl apply -f cronjob.yaml
+kubectl get cronjobs
+```
+
+Wait ~2 minutes and then check the pods created by the cronjob:
+
+```bash
+kubectl get pods --selector=job-name
+kubectl logs <pod-name>
+```
+
+### 📌 Notes
+
+- Jobs will automatically clean up if TTL is configured.
+- CronJobs retain successful and failed pods depending on `successfulJobsHistoryLimit` and `failedJobsHistoryLimit`.
+
+```
+# Example: Print pod logs from a specific job
+kubectl logs $(kubectl get pods --selector=job-name=hello-job -o jsonpath="{.items[0].metadata.name}")
+```
