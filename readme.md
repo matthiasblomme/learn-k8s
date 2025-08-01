@@ -222,3 +222,32 @@ kubectl logs <pod-name>
 # Example: Print pod logs from a specific job
 kubectl logs $(kubectl get pods --selector=job-name=hello-job -o jsonpath="{.items[0].metadata.name}")
 ```
+
+## Nugget 028 – Kubernetes Configuration Best Practices
+
+This nugget introduces best practices for organizing and managing Kubernetes manifests. You'll learn about:
+
+- Structuring your YAML files using `base` and `overlays`.
+- Applying meaningful `labels` and `annotations`.
+- Using `kustomize` for configuration reusability and environment-specific variations.
+
+### 🗂 File Structure
+The lesson is split into:
+- `base/`: Contains core YAML like deployments and services.
+- `overlays/dev` and `overlays/prod`: Customize things like replica counts or image versions.
+
+### ▶️ Run Instructions
+```bash
+kubectl apply -k overlays/dev/
+```
+
+To inspect the result:
+```bash
+kubectl get deployment,svc -l app=echo
+```
+
+### 📌 Notes
+- Labels help organize and query resources.
+- Annotations carry metadata that tools can use.
+- `kustomize` is built into `kubectl`, no plugin needed.
+
