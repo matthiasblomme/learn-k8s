@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: echo
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: 5679
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echo
+spec:
+  template:
+    spec:
+      containers:
+      - name: echo
+        args:
+        - "-text=Hello from PROD"
+        ports:
+        - containerPort: 5679

@@ -251,3 +251,34 @@ kubectl get deployment,svc -l app=echo
 - Annotations carry metadata that tools can use.
 - `kustomize` is built into `kubectl`, no plugin needed.
 
+
+# Nugget 029 - Helm Introduction
+
+This nugget introduces Helm, the package manager for Kubernetes.
+
+## What You Learned
+
+- How to install Helm and add chart repositories.
+- How to install, inspect, and upgrade a Helm chart.
+- The structure of a Helm release and how values files work.
+
+## Commands Summary
+
+```bash
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+helm install my-nginx bitnami/nginx
+helm show values bitnami/nginx > nginx-values.yaml
+helm upgrade my-nginx bitnami/nginx -f nginx-values.yaml
+helm uninstall my-nginx
+```
+
+## Test & Verify
+
+```bash
+kubectl get all
+kubectl port-forward svc/my-nginx 8080:80
+curl localhost:8080
+```
+
+The default NGINX chart will show a Bitnami welcome page.

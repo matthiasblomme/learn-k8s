@@ -1,0 +1,36 @@
+# Default values for ibm-appconnect.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+# -- Namespace where you wish to deploy the operator
+namespace: "appconnect"
+operator:
+  # -- Environment variables that you wish to pass to the operator pod e.g key: "value"
+  env: {}
+  # -- Number of replicas for the operator pod (1 recommended)
+  replicas: 1
+  deployment:
+    # -- Remote repository where you will pull the operator pod 
+    repository: icr.io/cpopen
+    # -- Operator image name
+    image: appconnect-operator
+    # -- SHA value of the operator image
+    sha: sha256:22f79c654dafbbd96d8835085db44e43ecbc60c7cafbf87c2c77f241461d666b
+    # -- Tag value for the operator image (optional) ignored if you supply SHA value
+    tag:
+    # -- PullPolicy for the operator image (Always, IfNotPresent, or Never)
+    pullPolicy: Always
+    # -- Resource limits to apply to the operator pod
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+        ephemeral-storage: 50Mi
+      limits:
+        memory: 1Gi
+        ephemeral-storage: 512Mi
+  # -- installMode for the operator to determine at what scope it operates (OwnNamespace|AllNamespaces)
+  installMode: OwnNamespace
+  # -- Names of secrets which allow pulling from authenticated registries
+  imagePullSecrets: []
+  # -- Private registry override to allow users to pull from alternative private registries
+  privateRegistry: ""
